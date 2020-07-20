@@ -1,3 +1,5 @@
+import bcrypt
+
 from db import db
 
 
@@ -11,7 +13,7 @@ class UserModel(db.Model):
 
     def __init__(self, email, password, fullname):
         self.email = email
-        self.password = password
+        self.password = (bcrypt.hashpw(password.encode('UTF-8'), bcrypt.gensalt())).decode('utf-8')
         self.fullname = fullname
 
     def save_to_db(self):
@@ -20,6 +22,6 @@ class UserModel(db.Model):
 
     @classmethod
     def find_by_email(cls, email):
-        return cls.query.filter_by(eamil=email).first()
+        return cls.query.filter_by(email=email).first()
 
 
